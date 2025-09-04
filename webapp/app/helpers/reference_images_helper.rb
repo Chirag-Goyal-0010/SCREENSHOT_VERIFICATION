@@ -1,0 +1,2 @@
+module ReferenceImagesHelper
+end

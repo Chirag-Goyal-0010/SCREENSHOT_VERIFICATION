@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: chirag
+  password: Chirag123
+  host: localhost
+
+development:
+  <<: *default
+  database: screenshot_verification_dev
+
+test:
+  <<: *default
+  database: screenshot_verification_test
+
+production:
+  <<: *default
+  database: screenshot_verification_prod

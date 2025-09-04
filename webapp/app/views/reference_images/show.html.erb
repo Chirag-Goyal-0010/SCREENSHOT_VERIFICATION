@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @reference_image %>
+
+<div>
+  <%= link_to "Edit this reference image", edit_reference_image_path(@reference_image) %> |
+  <%= link_to "Back to reference images", reference_images_path %>
+
+  <%= button_to "Destroy this reference image", @reference_image, method: :delete %>
+</div>

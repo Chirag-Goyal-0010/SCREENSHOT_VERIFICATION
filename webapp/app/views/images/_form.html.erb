@@ -1,0 +1,37 @@
+<%= form_with(model: image, local: true, html: { multipart: true }) do |form| %>
+  <% if image.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(image.errors.count, "error") %> prohibited this image from being saved:</h2>
+
+      <ul>
+        <% image.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, "Title", style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description, "Description", style: "display: block" %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.label :reference_image_id, "Select Reference", style: "display: block" %>
+    <%= form.collection_select :reference_image_id, ReferenceImage.all, :id, :title, prompt: "Select Reference" %>
+  </div>
+
+  <div>
+    <%= form.label :file, "Upload Screenshot", style: "display: block" %>
+    <%= form.file_field :file %>
+  </div>
+
+  <div>
+    <%= form.submit "Save Image" %>
+  </div>
+<% end %>

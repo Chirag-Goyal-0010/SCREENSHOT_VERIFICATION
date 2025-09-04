@@ -1,0 +1,27 @@
+<%= form_with(model: reference_image) do |form| %>
+  <% if reference_image.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(reference_image.errors.count, "error") %> prohibited this reference_image from being saved:</h2>
+
+      <ul>
+        <% reference_image.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.textarea :description %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
