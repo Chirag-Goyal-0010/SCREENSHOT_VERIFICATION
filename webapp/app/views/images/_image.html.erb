@@ -9,4 +9,55 @@
     <%= image.description %>
   </p>
 
+  <% if image.file.attached? %>
+    <p><strong>Screenshot:</strong></p>
+    <%= image_tag image.file, width: 300 %>
+  <% else %>
+    <p><em>No screenshot uploaded.</em></p>
+  <% end %>
+
+  <% if image.reference_image.present? && image.reference_image.file.attached? %>
+    <p><strong>Reference Image:</strong></p>
+    <%= image_tag image.reference_image.file, width: 300 %>
+  <% else %>
+    <p><em>No reference image attached.</em></p>
+  <% end %>
+
+  <% if image.phash_result.present? %>
+    <p><strong>pHash Similarity:</strong> <%= image.phash_result.similarity %> %</p>
+    <p>
+      <strong>pHash Decision:</strong>
+      <% case image.phash_result.decision %>
+        <% when "accept" %>
+          <span style="color: green; font-weight: bold;">Accept</span>
+        <% when "reject" %>
+          <span style="color: red; font-weight: bold;">Reject</span>
+        <% when "borderline" %>
+          <span style="color: orange; font-weight: bold;">Borderline</span>
+        <% else %>
+          <span>Unknown</span>
+      <% end %>
+    </p>
+  <% else %>
+    <p><em>No pHash result yet.</em></p>
+  <% end %>
+
+  <% if image.vgg16_decision.present? %>
+    <p><strong>VGG16 Similarity:</strong> <%= image.vgg16_similarity %></p>
+    <p>
+      <strong>VGG16 Decision:</strong>
+      <% case image.vgg16_decision %>
+        <% when "accept" %>
+          <span style="color: green; font-weight: bold;">Accept</span>
+        <% when "borderline" %>
+          <span style="color: orange; font-weight: bold;">Borderline</span>
+        <% when "reject" %>
+          <span style="color: red; font-weight: bold;">Reject</span>
+        <% else %>
+          <span>Unknown</span>
+      <% end %>
+    </p>
+  <% else %>
+    <p><em>No VGG16 result yet.</em></p>
+  <% end %>
 </div>

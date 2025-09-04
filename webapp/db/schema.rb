@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_03_124220) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_04_133315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,6 +48,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_03_124220) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "reference_image_id"
+    t.float "vgg16_similarity"
+    t.string "vgg16_decision"
     t.index ["reference_image_id"], name: "index_images_on_reference_image_id"
   end
 
