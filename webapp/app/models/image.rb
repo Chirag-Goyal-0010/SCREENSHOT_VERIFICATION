@@ -61,7 +61,7 @@ class Image < ApplicationRecord
       tmp_reference.rewind
 
       # ngrok URL for Flask VGG16 API
-      ngrok_url = "https://62970828a1da.ngrok-free.app/vgg16"
+      ngrok_url = ENV["VGG16_BASE_URL"] || "http://localhost:5002/vgg16"
       uri = URI.parse(ngrok_url)
 
       request = Net::HTTP::Post::Multipart.new(
