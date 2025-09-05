@@ -26,7 +26,6 @@ services:
       name: rails-active-storage
       mountPath: /rails/storage
       sizeGB: 5
-    postDeployCommand: ./bin/rails db:migrate
 
   - type: worker
     name: screenshot-verification-worker
@@ -50,6 +49,25 @@ services:
       - key: SOLID_QUEUE_IN_PUMA
         value: "false"
     dockerCommand: ./bin/rails solid_queue:start
+
+  - type: worker
+    name: screenshot-verification-migrate
+    env: docker
+    rootDir: webapp
+    plan: free
+    autoDeploy: false
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RACK_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: screenshot-verification-db
+          property: connectionString
+    dockerCommand: ./bin/rails db:migrate
 
   - type: pserv
     name: screenshot-verification-phash
