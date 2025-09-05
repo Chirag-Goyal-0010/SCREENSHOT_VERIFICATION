@@ -4,6 +4,10 @@ import imagehash
 
 app = Flask(__name__)
 
+@app.route("/ping", methods=["GET"])
+def ping():
+    return jsonify({"status": "ok", "service": "phash"})
+
 @app.route("/phash", methods=["POST"])
 def compute_phash():
     file = request.files["file"]
