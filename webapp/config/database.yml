@@ -1,18 +1,21 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: chirag
-  password: Chirag123
-  host: localhost
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV["DATABASE_USERNAME"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  host: <%= ENV["DATABASE_HOST"] %>
+  port: <%= ENV["DATABASE_PORT"] || 5432 %>
 
 development:
   <<: *default
-  database: screenshot_verification_dev
+  database: <%= ENV["DATABASE_NAME"] || "screenshot_verification_dev" %>
 
 test:
   <<: *default
-  database: screenshot_verification_test
+  database: <%= ENV["DATABASE_NAME_TEST"] || "screenshot_verification_test" %>
 
 production:
   <<: *default
-  database: screenshot_verification_prod
+  url: <%= ENV["DATABASE_URL"] %>
+  database: <%= ENV["DATABASE_NAME_PROD"] %>

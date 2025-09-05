@@ -1,0 +1,67 @@
+services:
+  - type: web
+    name: screenshot-verification-web
+    env: docker
+    rootDir: webapp
+    dockerCommand: ./bin/thrust ./bin/rails server -b 0.0.0.0 -p $PORT
+    healthCheckPath: /up
+    plan: starter
+    autoDeploy: true
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RACK_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: screenshot-verification-db
+          property: connectionString
+      - key: PHASH_BASE_URL
+        value: http://screenshot-verification-phash:5001
+    disk:
+      name: rails-active-storage
+      mountPath: /rails/storage
+      sizeGB: 5
+    postDeployCommand: ./bin/rails db:migrate
+
+  - type: worker
+    name: screenshot-verification-worker
+    env: docker
+    rootDir: webapp
+    plan: starter
+    autoDeploy: true
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RACK_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: screenshot-verification-db
+          property: connectionString
+      - key: SOLID_QUEUE_IN_PUMA
+        value: "false"
+    dockerCommand: ./bin/rails solid_queue:start
+
+  - type: pserv
+    name: screenshot-verification-phash
+    env: python
+    rootDir: image-analysis
+    buildCommand: pip install -r requirements.txt
+    startCommand: python phash_service.py
+    plan: free
+    autoDeploy: true
+    envVars: []
+
+databases:
+  - name: screenshot-verification-db
+    databaseName: screenshot_verification_prod
+    plan: free

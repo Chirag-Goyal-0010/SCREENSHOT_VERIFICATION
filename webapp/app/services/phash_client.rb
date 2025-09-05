@@ -2,7 +2,7 @@ require 'httparty'
 
 class PhashClient
   include HTTParty
-  base_uri "http://localhost:5001"
+  base_uri ENV.fetch("PHASH_BASE_URL", "http://localhost:5001")
 
   def self.compare(image_path, ref_path)
     options = {

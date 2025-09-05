@@ -6,6 +6,7 @@ gem 'multipart-post'
 ruby '3.3.0'
 
 
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.2", ">= 8.0.2.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
@@ -47,7 +48,8 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
-
+  
+  gem 'dotenv-rails'
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'faker'
