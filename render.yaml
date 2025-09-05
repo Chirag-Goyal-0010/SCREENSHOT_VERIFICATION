@@ -1,12 +1,13 @@
 services:
+  # Rails Web App
   - type: web
     name: screenshot-verification-web
     env: docker
     rootDir: webapp
-    dockerCommand: ./bin/thrust ./bin/rails server -b 0.0.0.0 -p $PORT
-    healthCheckPath: /up
-    plan: starter
+    plan: free
     autoDeploy: true
+    dockerCommand: bundle exec puma -C config/puma.rb
+    healthCheckPath: /up
     envVars:
       - key: RAILS_ENV
         value: production
@@ -22,16 +23,24 @@ services:
           property: connectionString
       - key: PHASH_BASE_URL
         value: http://screenshot-verification-phash:5001
-    disk:
-      name: rails-active-storage
-      mountPath: /rails/storage
-      sizeGB: 5
+      - key: VGG16_BASE_URL
+        value: http://screenshot-verification-vgg16:5002
+      # AWS S3 config (see below)
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: ap-south-1
+      - key: S3_BUCKET_NAME
+        value: screenshot-verification-storage
 
+  # Background Worker (Solid Queue or Sidekiq)
   - type: worker
     name: screenshot-verification-worker
     env: docker
     rootDir: webapp
-    plan: starter
+    plan: free
     autoDeploy: true
     envVars:
       - key: RAILS_ENV
@@ -50,6 +59,7 @@ services:
         value: "false"
     dockerCommand: ./bin/rails solid_queue:start
 
+  # Migration Worker
   - type: worker
     name: screenshot-verification-migrate
     env: docker
@@ -69,12 +79,24 @@ services:
           property: connectionString
     dockerCommand: ./bin/rails db:migrate
 
+  # Python pHash Service
   - type: pserv
     name: screenshot-verification-phash
     env: python
     rootDir: image-analysis
     buildCommand: pip install -r requirements.txt
     startCommand: python phash_service.py
+    plan: free
+    autoDeploy: true
+    envVars: []
+
+  # Python VGG16 Service
+  - type: pserv
+    name: screenshot-verification-vgg16
+    env: python
+    rootDir: image-analysis
+    buildCommand: pip install -r requirements.txt
+    startCommand: python vgg16_service.py
     plan: free
     autoDeploy: true
     envVars: []
